@@ -1,0 +1,18 @@
+import { createBrowserClient } from "@supabase/ssr";
+
+let client: ReturnType<typeof createBrowserClient> | null = null;
+
+export function createClient() {
+  if (client) return client;
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!url || url === "your_supabase_project_url" || !key || key === "your_supabase_anon_key") {
+    // Return a mock client that won't crash during build/dev without config
+    throw new Error("Supabase not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local");
+  }
+
+  client = createBrowserClient(url, key);
+  return client;
+}

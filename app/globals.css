@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #09090b;
+  --color-foreground: #fafafa;
+  --color-card: #18181b;
+  --color-border: #27272a;
+  --color-accent: #f77f00;
+  --color-accent-gold: #fcbf49;
+  --color-accent-navy: #003049;
+  --color-accent-red: #d62828;
+  --color-accent-cream: #eae2b7;
+  --color-muted: #a1a1aa;
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Accent border utility */
+.border-accent {
+  border-color: var(--color-accent);
+}
+
+/* Monospace tag styling */
+.mono-tag {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  background: rgba(39, 39, 42, 0.8);
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  color: var(--color-muted);
+}
+
+/* Glow effect on hover for cards */
+.card-glow {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card-glow:hover {
+  box-shadow: 0 0 20px rgba(247, 127, 0, 0.08);
+  border-color: rgba(247, 127, 0, 0.3);
+}
+
+/* Subtle grid background pattern */
+.grid-bg {
+  background-image: 
+    linear-gradient(rgba(39, 39, 42, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(39, 39, 42, 0.3) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
