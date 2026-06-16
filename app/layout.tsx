@@ -15,11 +15,11 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "John Doe | Full-Stack Developer & Systems Engineer",
+  title: "Lancaster | Full-Stack Developer & Systems Engineer",
   description:
     "Portfolio of a Senior Full-Stack Developer & Systems/DevOps Engineer specializing in complex software, database optimization, and infrastructure automation.",
   openGraph: {
-    title: "John Doe | Full-Stack Developer & Systems Engineer",
+    title: "Lancaster | Full-Stack Developer & Systems Engineer",
     description:
       "Building complex software, optimizing database architectures, and securing automation infrastructure.",
     type: "website",

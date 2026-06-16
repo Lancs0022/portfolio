@@ -5,12 +5,19 @@ import SecondaryProjects from "@/components/SecondaryProjects";
 import SkillsGrid from "@/components/SkillsGrid";
 import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
+import { SiteProvider } from "@/components/site-context";
+import { Particles, CursorTrail, SmoothCursor, RibbonsTrail, ClickSpark } from "@/components/animations";
 
 export default function Home() {
   return (
-    <>
+    <SiteProvider>
+      <Particles />
+      <CursorTrail />
+      <RibbonsTrail />
+      <SmoothCursor />
+      <ClickSpark />
       <Navbar />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <FeaturedProjects />
         <SecondaryProjects />
@@ -18,6 +25,6 @@ export default function Home() {
         <ContactForm />
       </main>
       <Footer />
-    </>
+    </SiteProvider>
   );
 }

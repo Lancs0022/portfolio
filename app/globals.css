@@ -1,18 +1,27 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #09090b;
+  --color-background: #030712;
   --color-foreground: #fafafa;
-  --color-card: #18181b;
-  --color-border: #27272a;
+  --color-card: #0f1117;
+  --color-card-hover: #151923;
+  --color-border: #1e2333;
   --color-accent: #f77f00;
   --color-accent-gold: #fcbf49;
   --color-accent-navy: #003049;
   --color-accent-red: #d62828;
   --color-accent-cream: #eae2b7;
-  --color-muted: #a1a1aa;
+  --color-muted: #71717a;
+  --color-muted-light: #a1a1aa;
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
+  --animate-shine: shine var(--duration) infinite linear;
+
+  @keyframes shine {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    to { background-position: 0% 0%; }
+  }
 }
 
 html {
@@ -25,42 +34,117 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Accent border utility */
+/* ─── Accent utilities ────────────────────────────────────────────── */
 .border-accent {
   border-color: var(--color-accent);
 }
 
-/* Monospace tag styling */
 .mono-tag {
   font-family: var(--font-mono), monospace;
-  font-size: 0.75rem;
-  padding: 0.125rem 0.5rem;
-  background: rgba(39, 39, 42, 0.8);
+  font-size: 0.7rem;
+  padding: 0.1rem 0.45rem;
+  background: rgba(30, 35, 51, 0.8);
   border: 1px solid var(--color-border);
   border-radius: 0.25rem;
-  color: var(--color-muted);
+  color: var(--color-muted-light);
+  letter-spacing: 0.02em;
 }
 
-/* Glow effect on hover for cards */
+/* ─── Card glow ───────────────────────────────────────────────────── */
 .card-glow {
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 .card-glow:hover {
-  box-shadow: 0 0 20px rgba(247, 127, 0, 0.08);
-  border-color: rgba(247, 127, 0, 0.3);
+  box-shadow: 0 0 28px rgba(247, 127, 0, 0.07), 0 0 6px rgba(247, 127, 0, 0.04);
+  border-color: rgba(247, 127, 0, 0.25);
 }
 
-/* Subtle grid background pattern */
+/* ─── Grid background ─────────────────────────────────────────────── */
 .grid-bg {
-  background-image: 
-    linear-gradient(rgba(39, 39, 42, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(39, 39, 42, 0.3) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(30, 35, 51, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 35, 51, 0.4) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
-/* Scrollbar styling */
+/* ─── Aurora text ─────────────────────────────────────────────────── */
+@keyframes aurora-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.aurora-text {
+  background: linear-gradient(
+    135deg,
+    #f77f00 0%,
+    #fcbf49 25%,
+    #f77f00 50%,
+    #d62828 75%,
+    #f77f00 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: aurora-shift 6s ease infinite;
+}
+
+/* LDM: disable aurora animation */
+.ldm .aurora-text {
+  animation: none;
+  background-position: 50% 50%;
+}
+
+/* ─── Neon focus ──────────────────────────────────────────────────── */
+.neon-input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.neon-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(247, 127, 0, 0.12), 0 0 16px rgba(247, 127, 0, 0.06);
+  outline: none;
+}
+
+/* ─── Tilted card effect ──────────────────────────────────────────── */
+.tilt-card {
+  transition: transform 0.3s ease;
+  transform-style: preserve-3d;
+}
+.tilt-card:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-3deg) translateY(-4px);
+}
+.ldm .tilt-card:hover {
+  transform: none;
+}
+
+/* ─── Pulse dot ───────────────────────────────────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(247, 127, 0, 0.6); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(247, 127, 0, 0); }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.ldm .pulse-dot {
+  animation: none;
+}
+
+/* ─── Rotate (for nav badge) ──────────────────────────────────────── */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+.ldm .spin-slow {
+  animation: none;
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-background);
@@ -73,10 +157,32 @@ body {
   background: var(--color-muted);
 }
 
+/* ─── Resume (dark theme) ────────────────────────────────────────── */
+.resume-mono {
+  font-family: var(--font-mono), monospace;
+}
+
+@media print {
+  .resume-root .no-print { display: none; }
+}
+
+/* ─── Particles container ────────────────────────────────────────── */
+.particles-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Ribbons container ──────────────────────────────────────────── */
+.ribbons-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* ─── Reduced motion ──────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+  html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;

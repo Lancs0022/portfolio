@@ -1,105 +1,155 @@
-import { ArrowRight } from "lucide-react";
+"use client";
+
+import Image from "next/image";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import { useSite } from "./site-context";
+import { TextReveal, FadeIn } from "./animations";
 import { GithubIcon, LinkedinIcon } from "./icons";
+import { NumberTicker } from "./animations";
 
 export default function Hero() {
+  const { t } = useSite();
+
   return (
     <section className="relative overflow-hidden">
-      {/* Subtle grid background */}
-      <div className="grid-bg absolute inset-0 opacity-40" />
+      {/* Grid background */}
+      <div className="grid-bg absolute inset-0 opacity-30" />
 
-      <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <div className="grid items-center gap-12 md:grid-cols-5">
-          {/* Left: Content */}
+      <div className="relative mx-auto max-w-6xl px-5 py-20 md:py-28 lg:py-32">
+        <div className="grid items-center gap-10 md:grid-cols-5">
+          {/* Left content */}
           <div className="md:col-span-3">
-            {/* Terminal accent line */}
-            <div className="mb-6 flex items-center gap-2 font-mono text-xs text-muted">
-              <span className="inline-block h-2 w-2 rounded-full bg-accent" />
-              <span>available for opportunities</span>
-            </div>
+            {/* Terminal status */}
+            <TextReveal delay={0.1}>
+              <div className="mb-5 flex items-center gap-2 font-mono text-xs text-muted-light">
+                <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-accent" />
+                <span>{t.hero.status}</span>
+              </div>
+            </TextReveal>
 
-            <h1 className="text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl md:text-5xl">
-              I build complex software,{" "}
-              <span className="text-accent">optimize database architectures</span>,
-              and secure automation infrastructure.
-            </h1>
+            {/* Headline with Aurora text */}
+            <TextReveal delay={0.2}>
+              <h1 className="text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl md:text-[2.75rem] lg:text-5xl">
+                <span className="text-foreground">{t.hero.headline1}</span>
+                <span className="aurora-text">{t.hero.headline2}</span>
+                <span className="text-foreground">{t.hero.headline3}</span>
+                <span className="aurora-text">{t.hero.headline4}</span>
+                <span className="text-foreground">{t.hero.headline5}</span>
+                <span className="aurora-text">{t.hero.headline6}</span>
+                <span className="text-foreground">{t.hero.headline7}</span>
+              </h1>
+            </TextReveal>
 
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-              Full-stack developer and system administrator with a strong
-              background in data optimization and DevOps automation. I design,
-              deploy, and maintain end-to-end solutions — from ERP systems to
-              cloud backup pipelines.
-            </p>
+            {/* Sub paragraph */}
+            <TextReveal delay={0.4}>
+              <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted-light md:text-base">
+                {t.hero.sub}
+              </p>
+            </TextReveal>
 
             {/* Actions */}
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-accent/90 cursor-pointer"
-              >
-                Let&apos;s Talk
-                <ArrowRight size={16} />
-              </a>
-
-              <div className="flex items-center gap-3">
+            <FadeIn delay={0.6}>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
                 <a
-                  href="https://github.com/Lancs0022"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-md border border-border p-2.5 text-muted transition-colors hover:border-accent hover:text-accent cursor-pointer"
-                  aria-label="GitHub"
+                  href="#contact"
+                  className="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-background transition-all hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20"
                 >
-                  <GithubIcon size={20} />
+                  {t.hero.cta}
+                  <ArrowRight size={16} />
                 </a>
                 <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-md border border-border p-2.5 text-muted transition-colors hover:border-accent hover:text-accent cursor-pointer"
-                  aria-label="LinkedIn"
+                  href="#projects"
+                  className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-5 py-2.5 text-sm text-muted-light transition-colors hover:border-accent/30 hover:text-foreground"
                 >
-                  <LinkedinIcon size={20} />
+                  {t.hero.ctaSecondary}
+                  <ChevronDown size={16} />
                 </a>
+                {/* Social icons */}
+                <div className="ml-2 flex items-center gap-3">
+                  <a
+                    href="https://github.com/Lancs0022"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted transition-colors hover:text-accent"
+                    aria-label="GitHub"
+                  >
+                    <GithubIcon size={18} />
+                  </a>
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted transition-colors hover:text-accent"
+                    aria-label="LinkedIn"
+                  >
+                    <LinkedinIcon size={18} />
+                  </a>
+                </div>
               </div>
-            </div>
+            </FadeIn>
           </div>
 
-          {/* Right: Profile Card */}
-          <div className="md:col-span-2">
-            <div className="rounded-lg border border-border bg-card p-6 card-glow">
-              {/* Avatar placeholder */}
-              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full border border-border bg-background font-mono text-2xl font-bold text-accent">
-                JD
+          {/* Right: Profile card */}
+          <FadeIn delay={0.5} direction="right" className="md:col-span-2">
+            <div className="mx-auto max-w-xs rounded-lg border border-border bg-card p-5 card-glow">
+              {/* Avatar with portrait */}
+              <div className="mb-4 flex items-center gap-3">
+                <div className="relative h-14 w-14 overflow-hidden rounded-full border-2 border-accent/30">
+                  <Image
+                    src="/images/Portrait_Lancs_15-06-2026.png"
+                    alt="Lancaster"
+                    fill
+                    className="object-cover object-top"
+                    priority
+                  />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Lancaster</p>
+                  <p className="font-mono text-[0.65rem] text-muted">Full-Stack / SysAdmin</p>
+                </div>
               </div>
 
-              <h2 className="text-lg font-bold text-foreground">John Doe</h2>
-              <p className="font-mono text-xs text-muted">
-                Full-Stack Developer &amp; Systems Engineer
-              </p>
+              {/* Status lines */}
+              <div className="space-y-2 border-t border-border pt-3">
+                {[
+                  { label: "status", value: "online", color: "bg-green-500" },
+                  { label: "role", value: "full-stack dev" },
+                  { label: "focus", value: "ERP / DevOps" },
+                  { label: "exp", value: "3+ years" },
+                ].map((item) => (
+                  <div key={item.label} className="flex items-center justify-between">
+                    <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">
+                      {item.label}
+                    </span>
+                    <span className="flex items-center gap-1.5 font-mono text-xs text-muted-light">
+                      {item.color && (
+                        <span className={`inline-block h-1.5 w-1.5 rounded-full ${item.color}`} />
+                      )}
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
 
-              {/* Status indicators */}
-              <div className="mt-4 space-y-2 font-mono text-xs">
-                <div className="flex items-center justify-between border-t border-border pt-3">
-                  <span className="text-muted">location</span>
-                  <span className="text-foreground">Madagascar</span>
-                </div>
-                <div className="flex items-center justify-between border-t border-border pt-3">
-                  <span className="text-muted">focus</span>
-                  <span className="text-accent-gold">ERP &amp; DevOps</span>
-                </div>
-                <div className="flex items-center justify-between border-t border-border pt-3">
-                  <span className="text-muted">stack</span>
-                  <span className="text-foreground">Laravel / React / Node</span>
-                </div>
-                <div className="flex items-center justify-between border-t border-border pt-3">
-                  <span className="text-muted">status</span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-500" />
-                    <span className="text-green-400">open to work</span>
-                  </span>
-                </div>
+              {/* Mini stats */}
+              <div className="mt-3 grid grid-cols-3 gap-2 border-t border-border pt-3">
+                {[
+                  { val: 11, suf: "+" },
+                  { val: 3, suf: "" },
+                  { val: 5, suf: "+" },
+                ].map((s, i) => (
+                  <div key={i} className="text-center">
+                    <div className="text-base font-bold text-accent">
+                      <NumberTicker value={s.val} suffix={s.suf} />
+                    </div>
+                    <div className="font-mono text-[0.6rem] text-muted">
+                      {["projects", "years", "stacks"][i]}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          </FadeIn>
         </div>
       </div>
     </section>

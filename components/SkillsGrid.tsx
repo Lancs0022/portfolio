@@ -1,149 +1,71 @@
-import { createClient } from "@/lib/supabase-server";
-import type { Skill } from "@/lib/types";
-import {
-  Server,
-  Code,
-  Database,
-  Wrench,
-  Terminal,
-} from "lucide-react";
+"use client";
 
-const categoryLabels: Record<string, string> = {
-  backend: "Backend & Frontend",
-  frontend: "Frontend Frameworks",
-  database: "Database Engineering",
-  systems: "Systems & Infrastructure",
-  tools: "Tools & DevOps",
-};
+import { Code, Database, Server } from "lucide-react";
+import { useSite } from "./site-context";
+import { TextReveal, FadeIn, BorderBeam } from "./animations";
 
-const categoryIcons: Record<string, React.ReactNode> = {
-  backend: <Code size={18} />,
-  frontend: <Code size={18} />,
-  database: <Database size={18} />,
-  systems: <Server size={18} />,
-  tools: <Wrench size={18} />,
-};
-
-const fallbackSkills: Skill[] = [
-  // Backend & Frontend
-  { id: "1", category: "backend", name: "Laravel", level: "expert", icon: null, sort_order: 0 },
-  { id: "2", category: "backend", name: "React", level: "expert", icon: null, sort_order: 1 },
-  { id: "3", category: "backend", name: "Next.js", level: "advanced", icon: null, sort_order: 2 },
-  { id: "4", category: "backend", name: "Node.js", level: "advanced", icon: null, sort_order: 3 },
-  { id: "5", category: "backend", name: "PHP", level: "expert", icon: null, sort_order: 4 },
-  { id: "6", category: "backend", name: "TypeScript", level: "advanced", icon: null, sort_order: 5 },
-  { id: "7", category: "backend", name: "HTML/CSS", level: "expert", icon: null, sort_order: 6 },
-  { id: "8", category: "backend", name: "Tailwind CSS", level: "advanced", icon: null, sort_order: 7 },
-  // Database
-  { id: "9", category: "database", name: "MySQL", level: "expert", icon: null, sort_order: 0 },
-  { id: "10", category: "database", name: "PostgreSQL", level: "advanced", icon: null, sort_order: 1 },
-  { id: "11", category: "database", name: "SQL Optimization", level: "expert", icon: null, sort_order: 2 },
-  { id: "12", category: "database", name: "Schema Design", level: "expert", icon: null, sort_order: 3 },
-  { id: "13", category: "database", name: "Query Tuning", level: "advanced", icon: null, sort_order: 4 },
-  // Systems
-  { id: "14", category: "systems", name: "Hardware Diagnostics", level: "expert", icon: null, sort_order: 0 },
-  { id: "15", category: "systems", name: "Network Administration", level: "advanced", icon: null, sort_order: 1 },
-  { id: "16", category: "systems", name: "PowerShell Scripting", level: "expert", icon: null, sort_order: 2 },
-  { id: "17", category: "systems", name: "Bash Scripting", level: "advanced", icon: null, sort_order: 3 },
-  { id: "18", category: "systems", name: "Cloudflare Tunnels", level: "advanced", icon: null, sort_order: 4 },
-  { id: "19", category: "systems", name: "Automated Backups", level: "expert", icon: null, sort_order: 5 },
-  { id: "20", category: "systems", name: "Linux Administration", level: "advanced", icon: null, sort_order: 6 },
-  // Tools
-  { id: "21", category: "tools", name: "Git", level: "expert", icon: null, sort_order: 0 },
-  { id: "22", category: "tools", name: "Docker", level: "intermediate", icon: null, sort_order: 1 },
-  { id: "23", category: "tools", name: "Electron", level: "advanced", icon: null, sort_order: 2 },
-  { id: "24", category: "tools", name: "CI/CD Pipelines", level: "intermediate", icon: null, sort_order: 3 },
-  { id: "25", category: "tools", name: "Vercel", level: "advanced", icon: null, sort_order: 4 },
+const categoryIcons = [
+  <Code key="code" size={18} />,
+  <Database key="db" size={18} />,
+  <Server key="srv" size={18} />,
 ];
 
-const levelColors: Record<string, string> = {
-  expert: "bg-accent",
-  advanced: "bg-accent-gold",
-  intermediate: "bg-muted",
-};
-
-export default async function SkillsGrid() {
-  let skills: Skill[] | null = null;
-  try {
-    const supabase = await createClient();
-    const result = await supabase
-      .from("skills")
-      .select("*")
-      .order("sort_order", { ascending: true });
-    skills = result.data;
-  } catch {
-    // Supabase not configured, use fallback
-  }
-
-  const displaySkills = skills && skills.length > 0 ? skills : fallbackSkills;
-
-  const categories = [
-    "backend",
-    "database",
-    "systems",
-    "tools",
-  ];
+export default function SkillsGrid() {
+  const { t } = useSite();
 
   return (
-    <section id="skills" className="border-t border-border bg-card/30">
-      <div className="mx-auto max-w-6xl px-6 py-20">
-        <div className="mb-12">
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
-            // technical competencies
-          </span>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
-            Skills &amp; Infrastructure
+    <section id="skills" className="relative py-16 md:py-24">
+      <div className="mx-auto max-w-6xl px-5">
+        {/* Section header */}
+        <TextReveal>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="inline-block h-px w-8 bg-accent" />
+            <span className="font-mono text-xs uppercase tracking-widest text-accent">
+              {t.skills.title}
+            </span>
+          </div>
+          <h2 className="text-xl font-bold text-foreground md:text-2xl">
+            {t.skills.subtitle}
           </h2>
-          <p className="mt-2 max-w-lg text-muted">
-            A dashboard view of core competencies across development, database
-            engineering, and systems administration.
-          </p>
-        </div>
+        </TextReveal>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {categories.map((cat) => {
-            const catSkills = displaySkills.filter((s) => s.category === cat);
-            return (
-              <div
-                key={cat}
-                className="rounded-lg border border-border bg-card p-6"
-              >
-                {/* Category header */}
-                <div className="mb-4 flex items-center gap-3">
-                  <span className="text-accent">
-                    {categoryIcons[cat] || <Terminal size={18} />}
-                  </span>
-                  <h3 className="font-mono text-sm font-semibold uppercase tracking-wider text-foreground">
-                    {categoryLabels[cat] || cat}
-                  </h3>
-                </div>
-
-                {/* Skills list */}
-                <div className="space-y-2">
-                  {catSkills.map((skill) => (
-                    <div
-                      key={skill.id}
-                      className="flex items-center justify-between border-t border-border/50 py-2"
-                    >
-                      <span className="text-sm text-foreground">{skill.name}</span>
-                      <div className="flex items-center gap-2">
-                        {skill.level && (
-                          <>
-                            <span
-                              className={`inline-block h-1.5 w-1.5 rounded-full ${levelColors[skill.level] || "bg-muted"}`}
-                            />
-                            <span className="font-mono text-xs text-muted">
-                              {skill.level}
-                            </span>
-                          </>
-                        )}
-                      </div>
+        {/* Dashboard grid */}
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
+          {t.skills.categories.map((cat, i) => (
+            <FadeIn key={cat.name} delay={i * 0.12}>
+              <BorderBeam className="h-full rounded-lg">
+                <div className="flex h-full flex-col border border-border bg-card p-5">
+                  {/* Category header */}
+                  <div className="mb-4 flex items-center gap-2.5">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent/10 text-accent">
+                      {categoryIcons[i]}
                     </div>
-                  ))}
+                    <h3 className="text-sm font-bold text-foreground">{cat.name}</h3>
+                  </div>
+
+                  {/* Skills list */}
+                  <div className="flex flex-1 flex-wrap gap-2">
+                    {cat.items.map((skill) => (
+                      <span
+                        key={skill}
+                        className="mono-tag transition-colors hover:border-accent/30 hover:text-accent"
+                      >
+                        <span className="mr-1.5 inline-block h-1 w-1 rounded-full bg-accent/60" />
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Count */}
+                  <div className="mt-4 border-t border-border pt-3">
+                    <span className="font-mono text-[0.65rem] text-muted">
+                      {cat.items.length} technologies
+                    </span>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              </BorderBeam>
+            </FadeIn>
+          ))}
         </div>
       </div>
     </section>

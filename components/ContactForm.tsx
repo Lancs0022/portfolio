@@ -2,16 +2,19 @@
 
 import { useState } from "react";
 import { Send, CheckCircle } from "lucide-react";
+import { useSite } from "./site-context";
+import { TextReveal, FadeIn } from "./animations";
 
 export default function ContactForm() {
+  const { t } = useSite();
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
+  const [msg, setMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("loading");
-
     const formData = new FormData(e.currentTarget);
+
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -26,134 +29,97 @@ export default function ContactForm() {
 
       if (res.ok) {
         setStatus("success");
-        setMessage("Message sent successfully. I'll get back to you soon.");
+        setMsg(t.contact.success);
         (e.target as HTMLFormElement).reset();
       } else {
         setStatus("error");
-        setMessage("Failed to send message. Please try again.");
+        setMsg(t.contact.error);
       }
     } catch {
       setStatus("error");
-      setMessage("Network error. Please try again.");
+      setMsg(t.contact.error);
     }
   }
 
+  const inputClass =
+    "w-full rounded-md border border-border bg-card px-4 py-3 text-sm text-foreground placeholder:text-muted neon-input";
+
   return (
-    <section id="contact" className="border-t border-border">
-      <div className="mx-auto max-w-6xl px-6 py-20">
-        <div className="mx-auto max-w-xl text-center">
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
-            // get in touch
-          </span>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
-            Let&apos;s Work Together
+    <section id="contact" className="relative py-16 md:py-24">
+      <div className="mx-auto max-w-2xl px-5">
+        <TextReveal>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="inline-block h-px w-8 bg-accent" />
+            <span className="font-mono text-xs uppercase tracking-widest text-accent">
+              {t.contact.title}
+            </span>
+          </div>
+          <h2 className="text-xl font-bold text-foreground md:text-2xl">
+            {t.contact.subtitle}
           </h2>
-          <p className="mt-2 text-muted">
-            Have a project in mind or need infrastructure expertise? Drop a
-            message and I&apos;ll get back to you.
-          </p>
-        </div>
+        </TextReveal>
 
-        <form
-          onSubmit={handleSubmit}
-          className="mx-auto mt-10 max-w-xl space-y-4"
-        >
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label
-                htmlFor="name"
-                className="mb-1 block font-mono text-xs text-muted"
-              >
-                Name
-              </label>
+        <FadeIn delay={0.2}>
+          <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
               <input
-                type="text"
-                id="name"
                 name="name"
+                type="text"
                 required
-                className="w-full rounded-md border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-muted outline-none transition-colors focus:border-accent"
-                placeholder="Your name"
+                placeholder={t.contact.name}
+                className={inputClass}
               />
-            </div>
-            <div>
-              <label
-                htmlFor="email"
-                className="mb-1 block font-mono text-xs text-muted"
-              >
-                Email
-              </label>
               <input
-                type="email"
-                id="email"
                 name="email"
+                type="email"
                 required
-                className="w-full rounded-md border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-muted outline-none transition-colors focus:border-accent"
-                placeholder="your@email.com"
+                placeholder={t.contact.email}
+                className={inputClass}
               />
             </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor="subject"
-              className="mb-1 block font-mono text-xs text-muted"
-            >
-              Subject
-            </label>
             <input
-              type="text"
-              id="subject"
               name="subject"
-              className="w-full rounded-md border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-muted outline-none transition-colors focus:border-accent"
-              placeholder="Project inquiry"
+              type="text"
+              placeholder={t.contact.subject}
+              className={inputClass}
             />
-          </div>
-
-          <div>
-            <label
-              htmlFor="message"
-              className="mb-1 block font-mono text-xs text-muted"
-            >
-              Message
-            </label>
             <textarea
-              id="message"
               name="message"
               required
               rows={5}
-              className="w-full resize-none rounded-md border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder-muted outline-none transition-colors focus:border-accent"
-              placeholder="Tell me about your project..."
+              placeholder={t.contact.message}
+              className={`${inputClass} resize-none`}
             />
-          </div>
 
-          {/* Status message */}
-          {status === "success" && (
-            <div className="flex items-center gap-2 text-sm text-green-400">
-              <CheckCircle size={16} />
-              <span>{message}</span>
-            </div>
-          )}
-          {status === "error" && (
-            <div className="flex items-center gap-2 text-sm text-accent-red">
-              <span>{message}</span>
-            </div>
-          )}
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 text-sm font-semibold text-background transition-all hover:bg-accent/90 hover:shadow-lg hover:shadow-accent/20 disabled:opacity-50"
+            >
+              {status === "loading" ? (
+                <>{t.contact.sending}</>
+              ) : (
+                <>
+                  {t.contact.send}
+                  <Send size={15} />
+                </>
+              )}
+            </button>
 
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-accent/90 disabled:opacity-50 cursor-pointer sm:w-auto"
-          >
-            {status === "loading" ? (
-              "Sending..."
-            ) : (
-              <>
-                Send Message
-                <Send size={16} />
-              </>
+            {msg && (
+              <div
+                className={`flex items-center gap-2 rounded-md border p-3 text-sm ${
+                  status === "success"
+                    ? "border-green-500/30 bg-green-500/5 text-green-400"
+                    : "border-accent-red/30 bg-accent-red/5 text-accent-red"
+                }`}
+              >
+                {status === "success" ? <CheckCircle size={16} /> : null}
+                {msg}
+              </div>
             )}
-          </button>
-        </form>
+          </form>
+        </FadeIn>
       </div>
     </section>
   );
