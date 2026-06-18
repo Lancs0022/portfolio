@@ -1,15 +1,18 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 
 // ─── Types ───────────────────────────────────────────────────────────
 type Lang = "en" | "fr";
+type Theme = "dark" | "light";
 
 interface SiteContextValue {
   lang: Lang;
   toggleLang: () => void;
   ldm: boolean;
   toggleLdm: () => void;
+  theme: Theme;
+  toggleTheme: () => void;
   t: typeof translations.en;
 }
 
@@ -377,9 +380,19 @@ const SiteContext = createContext<SiteContextValue | null>(null);
 export function SiteProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>("en");
   const [ldm, setLdm] = useState(false);
+  const [theme, setTheme] = useState<Theme>("dark");
 
   const toggleLang = useCallback(() => setLang((l) => (l === "en" ? "fr" : "en")), []);
   const toggleLdm = useCallback(() => setLdm((l) => !l), []);
+  const toggleTheme = useCallback(() => setTheme((t) => (t === "dark" ? "light" : "dark")), []);
+
+  // Restore theme from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem("theme") as Theme | null;
+    if (stored === "light" || stored === "dark") {
+      setTheme(stored);
+    }
+  }, []);
 
   useEffect(() => {
     const el = document.documentElement;
@@ -390,8 +403,18 @@ export function SiteProvider({ children }: { children: ReactNode }) {
     }
   }, [ldm]);
 
+  useEffect(() => {
+    const el = document.documentElement;
+    if (theme === "dark") {
+      el.classList.add("dark");
+    } else {
+      el.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
   return (
-    <SiteContext.Provider value={{ lang, toggleLang, ldm, toggleLdm, t: translations[lang] }}>
+    <SiteContext.Provider value={{ lang, toggleLang, ldm, toggleLdm, theme, toggleTheme, t: translations[lang] }}>
       {children}
     </SiteContext.Provider>
   );

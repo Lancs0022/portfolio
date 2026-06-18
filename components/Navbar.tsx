@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { FileText, Globe, Menu, Moon, Sun, X, Zap } from "lucide-react";
 import Link from "next/link";
-import { Menu, X, Globe, Zap, FileText } from "lucide-react";
-import { useSite } from "./site-context";
+import { useState } from "react";
 import { ShineBorder } from "./animations";
+import { useSite } from "./site-context";
 
 export default function Navbar() {
-  const { t, lang, toggleLang, ldm, toggleLdm } = useSite();
+  const { t, lang, toggleLang, ldm, toggleLdm, theme, toggleTheme } = useSite();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navLinks = [
@@ -37,6 +37,15 @@ export default function Navbar() {
           >
             <Globe size={13} />
             <span className="font-mono">{lang === "en" ? "FR" : "EN"}</span>
+          </button>
+
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1.5 text-xs font-medium text-muted-light transition-colors hover:border-accent/30 hover:text-foreground"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? <Sun size={13} /> : <Moon size={13} />}
           </button>
 
           {/* LDM Toggle */}
@@ -69,7 +78,7 @@ export default function Navbar() {
             href="/admin"
             className="relative ml-1 overflow-hidden rounded-md bg-card px-4 py-1.5 text-xs font-semibold text-accent transition-colors hover:bg-card-hover"
           >
-            <ShineBorder borderWidth={1} duration={8} shineColor={["#f77f00", "#fcbf49"]} />
+            <ShineBorder borderWidth={1} duration={20} shineColor={["#f77f00", "#fcbf49"]} />
             <span className="relative z-10">{t.nav.admin}</span>
           </a>
 
@@ -107,6 +116,13 @@ export default function Navbar() {
             >
               <Globe size={13} />
               <span className="font-mono">{lang === "en" ? "FR" : "EN"}</span>
+            </button>
+            <button
+              onClick={toggleTheme}
+              className="flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-2 text-xs font-medium text-muted-light"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun size={13} /> : <Moon size={13} />}
             </button>
             <button
               onClick={toggleLdm}

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-@theme inline {
+/* ─── Theme color values (dynamic CSS vars, runtime-switchable) ──── */
+:root {
   --color-background: #030712;
   --color-foreground: #fafafa;
   --color-card: #0f1117;
@@ -13,6 +14,35 @@
   --color-accent-cream: #eae2b7;
   --color-muted: #71717a;
   --color-muted-light: #a1a1aa;
+}
+
+:root:not(.dark) {
+  --color-background: #ffffff;
+  --color-foreground: #0f172a;
+  --color-card: #f1f5f9;
+  --color-card-hover: #e2e8f0;
+  --color-border: #cbd5e1;
+  --color-muted: #64748b;
+  --color-muted-light: #475569;
+}
+
+/* ─── Tailwind theme registration (utilities use var() references) ── */
+@theme {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-card: var(--color-card);
+  --color-card-hover: var(--color-card-hover);
+  --color-border: var(--color-border);
+  --color-accent: var(--color-accent);
+  --color-accent-gold: var(--color-accent-gold);
+  --color-accent-navy: var(--color-accent-navy);
+  --color-accent-red: var(--color-accent-red);
+  --color-accent-cream: var(--color-accent-cream);
+  --color-muted: var(--color-muted);
+  --color-muted-light: var(--color-muted-light);
+}
+
+@theme inline {
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
   --animate-shine: shine var(--duration) infinite linear;
@@ -26,6 +56,12 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+:root:not(.dark) {
+  color-scheme: light;
 }
 
 body {
@@ -49,6 +85,9 @@ body {
   color: var(--color-muted-light);
   letter-spacing: 0.02em;
 }
+:root:not(.dark) .mono-tag {
+  background: rgba(226, 232, 240, 0.8);
+}
 
 /* ─── Card glow ───────────────────────────────────────────────────── */
 .card-glow {
@@ -58,6 +97,9 @@ body {
   box-shadow: 0 0 28px rgba(247, 127, 0, 0.07), 0 0 6px rgba(247, 127, 0, 0.04);
   border-color: rgba(247, 127, 0, 0.25);
 }
+:root:not(.dark) .card-glow:hover {
+  box-shadow: 0 0 28px rgba(247, 127, 0, 0.1), 0 0 6px rgba(247, 127, 0, 0.06);
+}
 
 /* ─── Grid background ─────────────────────────────────────────────── */
 .grid-bg {
@@ -65,6 +107,11 @@ body {
     linear-gradient(rgba(30, 35, 51, 0.4) 1px, transparent 1px),
     linear-gradient(90deg, rgba(30, 35, 51, 0.4) 1px, transparent 1px);
   background-size: 64px 64px;
+}
+:root:not(.dark) .grid-bg {
+  background-image:
+    linear-gradient(rgba(203, 213, 225, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(203, 213, 225, 0.5) 1px, transparent 1px);
 }
 
 /* ─── Aurora text ─────────────────────────────────────────────────── */
@@ -87,7 +134,7 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: aurora-shift 6s ease infinite;
+  animation: aurora-shift 15s ease infinite;
 }
 
 /* LDM: disable aurora animation */

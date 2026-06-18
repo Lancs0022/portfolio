@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useInView, useSpring } from "framer-motion";
-import { Renderer, Camera, Geometry, Program, Mesh, Transform, Vec3, Color, Polyline } from "ogl";
+import { Camera, Color, Geometry, Mesh, Polyline, Program, Renderer, Transform, Vec3 } from "ogl";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useSite } from "./site-context";
 
 // ─── Hex → RGB helper ──────────────────────────────────────────────
@@ -660,39 +660,45 @@ export function BorderBeam({
 }) {
   const { ldm } = useSite();
 
+  const perimeter = [
+    "0% 100%",   // bottom-left
+    "0% 0%",     // top-left
+    "100% 0%",   // top-right
+    "100% 100%", // bottom-right
+    "0% 100%",   // back to start
+  ];
+  const beamStyle = {
+    width: size,
+    height: size,
+    background: `radial-gradient(circle, ${colorFrom}, ${colorTo}, transparent)`,
+    filter: "blur(4px)",
+    borderRadius: "50%",
+    marginLeft: -(size / 2),
+    marginTop: -(size / 2),
+  };
+
   return (
     <div className={`relative overflow-hidden ${className}`}>
       {children}
       {!ldm && (
         <>
-          <motion.div
-            className="absolute"
-            style={{
-              width: size,
-              height: borderWidth,
-              background: `linear-gradient(90deg, transparent, ${colorFrom}, ${colorTo}, transparent)`,
-              filter: "blur(0.5px)",
-            }}
-            animate={{
-              top: ["0%", "0%", "100%", "100%", "0%"],
-              left: ["0%", "100%", "100%", "0%", "0%"],
-            }}
-            transition={{ duration, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.div
-            className="absolute"
-            style={{
-              width: borderWidth,
-              height: size,
-              background: `linear-gradient(180deg, transparent, ${colorFrom}, ${colorTo}, transparent)`,
-              filter: "blur(0.5px)",
-            }}
-            animate={{
-              top: ["0%", "100%", "100%", "0%", "0%"],
-              left: ["100%", "100%", "0%", "0%", "0%"],
-            }}
-            transition={{ duration, repeat: Infinity, ease: "linear" }}
-          />
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              className="pointer-events-none absolute"
+              style={beamStyle}
+              animate={{
+                top: perimeter,
+                left: perimeter,
+              }}
+              transition={{
+                duration,
+                repeat: Infinity,
+                ease: "linear",
+                delay: -(duration / 3) * i,
+              }}
+            />
+          ))}
         </>
       )}
     </div>
@@ -769,7 +775,7 @@ export function TextReveal({
     <motion.div
       ref={ref} className={className}
       initial={{ opacity: 0, y: 24, filter: "blur(4px)" }}
-      animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+      animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 24, filter: "blur(4px)" }}
       transition={{ duration: 0.7, delay, ease: [0.25, 0.4, 0.25, 1] }}
     >
       {children}
@@ -790,7 +796,7 @@ export function FadeIn({
     <motion.div
       ref={ref} className={className}
       initial={{ opacity: 0, ...dirMap[direction] }}
-      animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
+      animate={inView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, ...dirMap[direction] }}
       transition={{ duration: 0.5, delay, ease: "easeOut" }}
     >
       {children}

@@ -34,8 +34,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${jetbrainsMono.variable} dark h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light")document.documentElement.classList.remove("dark")}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
       </body>
